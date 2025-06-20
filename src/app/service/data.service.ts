@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { ExerciseDay } from './data/ExerciseDay';
-import { Sheet } from './data/Sheet';
-import { EXERCISEDAYS } from './data/Mock-Data';
-import { SHEETS } from './data/Mock-Data';
+import { ExerciseDay } from '../data/ExerciseDay';
+import { Sheet } from '../data/Sheet';
+import { EXERCISEDAYS } from '../data/Mock-Data';
+import { SHEETS } from '../data/Mock-Data';
 import { expand, Observable, of } from 'rxjs';
-import { MessageService } from './message.service';
+import { MessageService } from '../message.service';
 
 @Injectable({
   providedIn: 'root'

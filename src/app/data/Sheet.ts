@@ -1,5 +1,5 @@
 export class Sheet {
-    shortName: String = 'not defined';
-    note?: String;
-    htmlBody?: String;
+    shortName: string = 'not defined';
+    note?: string;
+    htmlBody?: string;
 }
