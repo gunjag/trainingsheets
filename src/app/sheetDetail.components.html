@@ -1,0 +1,9 @@
+    <div>
+        <div>
+            Id<input disabled="true" [(ngModel)]="id"><br>
+            Name<input required [(ngModel)]="name"><br>
+            Note<input type="textarea" cols="40" rows="3" [(ngModel)]="note"><br>
+            Text<input type="textarea" rows="5"#myInput [(ngModel)]="text">
+      </div>
+      <button type="saveSheetButton" (click)="clickedSaveSheetButton(id, name,note,text)" clickable>Save</button>
+    </div>
