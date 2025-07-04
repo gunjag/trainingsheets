@@ -1,0 +1,18 @@
+input[type="saveSheetButton"] {
+    bottom: 0;
+    color: black;
+    vertical-align: bottom;
+    /* Add other styles as needed */
+}
+
+.container {
+  display: flex;
+  align-items: right;
+}
+
+
+button {
+  margin-bottom: 10px;
+
+  /* button styles go here */
+}
