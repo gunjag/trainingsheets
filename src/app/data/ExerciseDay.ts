@@ -6,13 +6,5 @@ export class ExerciseDay {
     date?: Date;
     sheets?: Sheet[];
 
-    // getSheets(): Sheet[] {
-    //     return this.sheets;
-    // }
-
-    // addSheet(sheet: Sheet) {
-    //     sheets = [sheet];
-    // }
-
 }
 
