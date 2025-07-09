@@ -1,0 +1,19 @@
+<div>
+    <h2 mat-dialog-title>Search for Sheets by Name</h2>
+    <mat-dialog-content>
+        <mat-form-field>
+        <input matInput #queryNameInput>
+        <button mat-button color="primary" (click)="search(queryNameInput.value)">Search</button>
+        </mat-form-field>
+        <div class="sheetList">
+        <li mat-list #matList *ngFor="let sheet of sheetList" class="col-1-4">
+            <button mat-button [class.selected]="sheet === selectedSheet" (click)="selectSheet(sheet)" clickable>
+            <span>{{sheet.shortName}}</span>
+            </button>
+        </li>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button color="primary" (click)="clickedAddSheetButton()" clickable>add</button>
+    </mat-dialog-actions>
+</div>
