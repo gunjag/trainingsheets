@@ -87,8 +87,17 @@ export class TableOfContentsComponent {
     console.log(this.activeSheet.id);
     if(this.showTOC) {
       // Delete in TOC
-      console.log("Not yet implemented");
-      } else {
+      const sheetIndex = this.sheets.findIndex(x => x.id === this.activeSheet.id);
+      for(var exDay of this.exerciseDays) {
+        var daySheets = exDay.sheets as Array<Sheet>;
+        var sheetInDayIndex = daySheets.findIndex(x => x.id === this.activeSheet.id);
+          if(sheetInDayIndex as number > 0) {
+            console.log("found index",sheetInDayIndex);
+            daySheets?.splice(sheetInDayIndex, 1);
+          }
+      }
+      this.sheets?.splice(sheetIndex, 1);
+    } else {
       // Remove from ExerciseDay
       let selExDay: ExerciseDay = this.activeService.currentDate.value as ExerciseDay;
       let list = selExDay.sheets as Sheet[];
@@ -103,7 +112,8 @@ export class TableOfContentsComponent {
     const newDay: ExerciseDay = new ExerciseDay(this.dataService.getNextExerciseDayId(), new Date, []);
     this.exerciseDays.push(newDay);
     this.activeService.currentDate.next(newDay);
-    this.openDayQueryModal()
+    this.openDayQueryModal();
+    this.selectDate(newDay);
   }
 
   clickedEditExerciseButton() {
@@ -119,11 +129,11 @@ export class TableOfContentsComponent {
     this.sheets = new Array;
   }
 
-  async openDayQueryModal() {
+  async openDayQueryModal(): Promise<Date | undefined> {
     if(this.activeService.currentDate.value != null) {
-      var selExDayId = (this.activeService.currentDate.value as ExerciseDay).id;
+      var selExDayId = (this.activeService.currentDate.value as ExerciseDay).id as number;
     } else {
-      return
+      return undefined;
     }
     const dialogRef = this.dialog.open(DayQueryModalComponent, {
       width: '400px'
@@ -133,10 +143,13 @@ export class TableOfContentsComponent {
     console.log(resultString);
     var day = this.makeDate(resultString);
     console.log(day?.toLocaleDateString())
-    if(selExDayId != null) {
+    if(day === undefined) {
+      return undefined
+    } else {
       this.activeService.currentDate.value.date = day;
       //this.activeService.currentDate.next({date: day});
-      this.dataService.editExperciseDay(selExDayId)
+      this.dataService.editExperciseDay(selExDayId);
+      return day;
     }
   }
 
@@ -162,6 +175,7 @@ export class TableOfContentsComponent {
 
   makeDate(dateString: string): Date | undefined {
     //formatDate(Date.now(),'yyyy-MM-dd','en-US');
+    if(dateString === undefined) return undefined;
     let temp: number[] = dateString.split('.').map(Number);
     if(temp.length != 3) return undefined;
     return new Date(Date.UTC(temp[2], temp[1] - 1, temp[0]));

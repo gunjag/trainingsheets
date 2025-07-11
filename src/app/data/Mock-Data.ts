@@ -17,7 +17,7 @@ const s2: Sheet = {
 
 const s3: Sheet = {
     id: 3,
-    shortName: 'Sheet 22',
+    shortName: 'Sheet 22a',
     htmlBody: '<body>Sheet3</body>',
     note: 'note text 3'
 };
