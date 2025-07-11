@@ -1,9 +1,15 @@
-    <div>
-        <div>
-            Id<input disabled="true" [(ngModel)]="id"><br>
-            Name<input required [(ngModel)]="name"><br>
-            Note<input type="textarea" cols="40" rows="3" [(ngModel)]="note"><br>
-            Text<input type="textarea" rows="5"#myInput [(ngModel)]="text">
-      </div>
-      <button type="saveSheetButton" (click)="clickedSaveSheetButton(id, name,note,text)" clickable>Save</button>
+    <div class="sheetContainer">
+        <form>
+            <label for="sheet-id">Id</label><input id="sheet-id" disabled="true" [(ngModel)]="sheet.id" name="sheetId"/><br>
+            <label for="sheet-name">Name</label><input id="sheet-id" required [(ngModel)]="sheet.shortName" name="sheetShortName"/><br>
+            <label for="sheet-note">Note</label><textarea for="sheet-note" cols="0" rows="3" [(ngModel)]="sheet.note" name="sheetNote"></textarea><br>
+            <label for="sheet-htmlBody">Beschreibung Html</label><textarea for="sheet-htmlBody" cols="0" rows="3" [(ngModel)]="sheet.htmlBody" name="sheetHtmlBody"></textarea>
+            <div [innerHtml]="this.sheet.htmlBody"></div>
+        </form>
     </div>
+    <div class="filler">
+    </div>
+    <div class="appButtons">
+        <button type="saveSheetButton" (click)="clickedSaveSheetButton()" clickable>Save</button>
+    </div>
+    

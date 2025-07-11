@@ -1,31 +1,38 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { CommonModule, NgFor } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { formatDate } from '@angular/common';
 import { RouterModule, RouterLink, RouterLinkActive } from '@angular/router';
 import { DataService } from '../service/data.service';
 import { ExerciseDay } from '../data/ExerciseDay';
 import { Sheet } from '../data/Sheet';
 import { SheetDetailComponent } from '../sheetDetail.component';
-import { Observable } from 'rxjs';
+import { NEVER, Observable } from 'rxjs';
 import { BehaviorSubject } from "rxjs";
 import { ActiveService } from '../service/active-service';
-
+import { SHEETS } from '../data/Mock-Data';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
+import { DayQueryModalComponent } from './dayQueryModal.component';
+import { FormsModule } from '@angular/forms';
+import { SheetQueryModalComponent } from './searchSheetQueryModal.component';
 
 @Component({
   selector: 'app-table-of-contents',
-  imports: [ CommonModule, RouterModule, SheetDetailComponent ],  
+  imports: [ CommonModule, RouterModule, FormsModule, NgFor, SheetDetailComponent ],  
   templateUrl: './table-of-contents.component.html',
-  styleUrl: './table-of-contents.component.css'
+  styleUrl: './table-of-contents.component.css',
+  providers: [ { provide: MatDialogRef,useValue: {} } ]
 })
 
 export class TableOfContentsComponent {
 
   exerciseDays: ExerciseDay[] = [];
   sheets: Sheet[] = [];
-  selectedDay?: ExerciseDay;
-  selectedSheet?: Sheet;
-  editMode: boolean = false;
-  
-  constructor(private dataService: DataService, private activeService: ActiveService) {
+  readonly dialog = inject(MatDialog);
+  activeSheet: Sheet = new Sheet();
+  activeExerciseDay: ExerciseDay = new ExerciseDay;
+  showTOC: boolean = true;
+     
+  constructor(private dialogRef: MatDialogRef<TableOfContentsComponent>, private dataService: DataService, public activeService: ActiveService) {
   }
 
   ngOnInit(): void {
@@ -36,23 +43,139 @@ export class TableOfContentsComponent {
   getExerciseDays(): void {
     this.dataService.getExerciseDays().subscribe(exerciseDays => this.exerciseDays = exerciseDays);
   }
-  getSheets(): void {
+  getSheets(): Sheet[] {
     this.dataService.getSheets().subscribe(sheets => this.sheets = sheets);
+    return this.sheets;
   }
   selectDate(arg: ExerciseDay): void {
-    console.log("clicked", arg)
-    this.activeService.currentDate.next(arg)
+    console.log("clicked", arg);
+    this.activeService.currentDate.next(arg);
+    this.activeExerciseDay = arg;
+    this.activeSheet = new Sheet();
+    this.showTOC = false;
+    this.showSheets(arg);
   }
   selectSheet(arg: Sheet): void {
-    console.log("clicked", arg)
-    this.activeService.currentSheet.next(arg)
-    this.selectedSheet = arg;
+    console.log("clicked", arg);
+    this.activeSheet = arg;
+  }
+
+  showSheets(exDay: ExerciseDay) {
+    this.sheets = exDay.sheets as Sheet[];
+  }
+
+  showSheetsTOC() {
+    this.activeExerciseDay = new ExerciseDay();
+    this.getSheets();
   }
 
   clickedNewSheetButton() {
-    console.log("clicked new sheet", this.selectedSheet);
+    console.log("clicked new sheet", this.activeService.currentSheet);
+    const newSheet: Sheet = new Sheet(this.dataService.getNextSheetId());
+    this.sheets.push(newSheet);
+    this.activeSheet = newSheet;
   }
+
   clickedAddSheetButton() {
-    console.log("clicked add sheet", this.selectedSheet);
+    if(this.showTOC) return;
+    console.log("clicked add sheet");
+    this.openSheetQueryModal()
+  }
+
+  clickedDeleteSheetButton() {
+    if(this.activeSheet === null) return;
+    console.log(this.activeSheet.id);
+    if(this.showTOC) {
+      // Delete in TOC
+      console.log("Not yet implemented");
+      } else {
+      // Remove from ExerciseDay
+      let selExDay: ExerciseDay = this.activeService.currentDate.value as ExerciseDay;
+      let list = selExDay.sheets as Sheet[];
+      const index = list.findIndex(x => x.id === this.activeSheet.id);
+      selExDay.sheets?.splice(index, 1);
+    };
+    
+  }
+
+  clickedNewExerciseButton() {
+    console.log("clicked new day", this.activeService.currentDate);
+    const newDay: ExerciseDay = new ExerciseDay(this.dataService.getNextExerciseDayId(), new Date, []);
+    this.exerciseDays.push(newDay);
+    this.activeService.currentDate.next(newDay);
+    this.openDayQueryModal()
+  }
+
+  clickedEditExerciseButton() {
+    this.openDayQueryModal()
+  }
+
+  clickedDeleteExerciseButton() {
+    if(this.activeExerciseDay === null) return;
+    //let selExDay: ExerciseDay = this.activeService.currentDate.value as ExerciseDay;
+    let list = this.exerciseDays;
+    const index = list.findIndex(x => x.id === this.activeExerciseDay.id);
+    list.splice(index, 1);
+    this.sheets = new Array;
+  }
+
+  async openDayQueryModal() {
+    if(this.activeService.currentDate.value != null) {
+      var selExDayId = (this.activeService.currentDate.value as ExerciseDay).id;
+    } else {
+      return
+    }
+    const dialogRef = this.dialog.open(DayQueryModalComponent, {
+      width: '400px'
+    });
+
+    const resultString = await dialogRef.afterClosed().toPromise();
+    console.log(resultString);
+    var day = this.makeDate(resultString);
+    console.log(day?.toLocaleDateString())
+    if(selExDayId != null) {
+      this.activeService.currentDate.value.date = day;
+      //this.activeService.currentDate.next({date: day});
+      this.dataService.editExperciseDay(selExDayId)
+    }
+  }
+
+  async openSheetQueryModal() {
+    if(this.activeService.currentDate.value != null) {
+      var selExDay: ExerciseDay = this.activeService.currentDate.value as ExerciseDay;
+    } else {
+      return
+    }
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.width = '400px';
+    dialogConfig.height = '600px';
+    dialogConfig.data = this.dataService.getSheetsNotObserved();
+    const dialogRef = this.dialog.open(SheetQueryModalComponent, dialogConfig);
+
+    const resultSheet = await dialogRef.afterClosed().toPromise();
+    console.log(resultSheet);
+    if(resultSheet != null) {
+      selExDay.sheets?.push(resultSheet);
+      console.log("...added");
+    }
+  }
+
+  makeDate(dateString: string): Date | undefined {
+    //formatDate(Date.now(),'yyyy-MM-dd','en-US');
+    let temp: number[] = dateString.split('.').map(Number);
+    if(temp.length != 3) return undefined;
+    return new Date(Date.UTC(temp[2], temp[1] - 1, temp[0]));
+  }
+
+  openSheetListOneDay() {
+    console.log("Pressed One Day", this.activeExerciseDay)
+    // if(this.showTOC) this.showTOC = false;
+    // this.showSheets(this.activeExerciseDay);
+  }
+
+  openSheetListTOC() {
+    console.log("Pressed TOC", this.activeExerciseDay)
+    if(!this.showTOC) this.showTOC = true;
+    this.showSheetsTOC();
   }
 }

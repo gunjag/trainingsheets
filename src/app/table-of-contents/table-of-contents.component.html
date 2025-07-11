@@ -1,36 +1,42 @@
-<p>Table of contents</p>
-<nav>
-  <ul>
-    <li><a routerLink="./sheet1" routerLinkActive="active" ariaCurrentWhenActive="page">Sheet 1</a></li>
-    <li><a routerLink="./sheet2" routerLinkActive="active" ariaCurrentWhenActive="page">Sheet 2</a></li>
-  </ul>
-</nav>
-
 <div class="grid-container" style="line-height: normal">
-  <div class="item1">Training Sheets</div>
-  <div class="item2">
-   <div class="grid grid-pad">
-    <a *ngFor="let exerciseDay of exerciseDays" class="col-1-4" routerLink="/{{exerciseDay.date | date:'dd.mm.yyyy'}}">
-      <div class="module exerciseDay" (click)="selectDate(exerciseDay)" clickable>
-        <h4>{{exerciseDay.date | date:'dd.mm.yyyy' }}</h4>
-      </div>
-    </a>
-   </div>
-   <button type="newExerciseDayButton">New</button>
+  <div class="header">Training Sheets</div>
+  <div class="exerciseDays">
+    <h6>Calender</h6>
+    <li *ngFor="let exerciseDay of exerciseDays"routerLink="/{{exerciseDay.date | date:'dd.MM.yyyy'}}">
+      <button [class.selected]="exerciseDay === activeExerciseDay" type="button" (click)="selectDate(exerciseDay)">
+        <span class="date">{{exerciseDay.date | date:'dd.MM.yyyy' }}</span>
+      </button>
+    </li>
   </div>
-  <div class="item3">
-    <div class="grid grid-pad">
-      <a *ngFor="let sheet of sheets" class="col-1-4" routerLink="/{{sheet.shortName}}">
-        <div class="module sheet" (click)="selectSheet(sheet)" clickable>
-          <h4>{{sheet.shortName}}</h4>
-        </div>
-      </a>
+  <div class="appButtons">
+    <button type="newExerciseDayButton" (click)="clickedNewExerciseButton()" clickable>New</button>
+    <button type="editExerciseDayButton" (click)="clickedEditExerciseButton()" clickable>Edit</button>
+    <button type="deleteExerciseDayButton" (click)="clickedDeleteExerciseButton()" clickable>Delete</button>
+  </div>
+  <div class="sheetListButtons">
+    <div class="flex-column">
+      <button [class.selected]="showTOC === false" [disabled]="true" (click)="openSheetListOneDay()" >Day {{this.activeExerciseDay.date | date:'dd.MM.yyyy'}}</button>
     </div>
+    <div class="flex-column">
+      <button [class.selected]="showTOC === true" (click)="openSheetListTOC()">Table of Contents</button>
+    </div>
+  </div>
+  <div class="sheetList">
+        <h6>Sheets</h6>
+    <li *ngFor="let sheet of sheets" class="col-1-4" routerLink="/{{sheet.shortName}}">
+      <button [class.selected]="sheet === activeSheet" (click)="selectSheet(sheet)" clickable>
+        <span>{{sheet.shortName}}</span>
+      </button>
+    </li>
+  </div>
+  <div class="appButtons">
     <button type="addSheetButton" (click)="clickedAddSheetButton()" clickable>Add</button>
     <button type="newSheetButton" (click)="clickedNewSheetButton()" clickable>New</button>
-  </div>  
-  <div class="item4">
-    <sheetDetail></sheetDetail>
+    <button type="deleteSheetButton" (click)="clickedDeleteSheetButton()" clickable>Delete</button>
   </div>
-  <div class="item5">Footer</div>
+
+  <div class="sheetDetailCompo">
+    <sheetDetail [sheet]="this.activeSheet"></sheetDetail>
+  </div>
 </div>
+

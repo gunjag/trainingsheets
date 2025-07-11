@@ -8,5 +8,71 @@
 .right {
     text-align: right;
   }
-  
 
+.appButtons button {
+  background-color: #f1f1f1;
+  color:#000;
+  border: 2px solid; /* Green border */
+  padding: 2px 24px; /* Some padding */
+  border-radius: 4px;
+  cursor: pointer; /* Pointer/hand icon */
+  float: right; /* Float the buttons side by side */
+}
+
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* sheetList */
+
+.sheetList {
+  margin: 0 0 0 0;
+  list-style-type: none;
+  padding: 0;
+}
+
+.sheetList li {
+  display: flex;
+}
+
+.sheetList button {
+  flex: 1;
+  cursor: pointer;
+  position: relative;
+  left: 0;
+  background-color: #EEE;
+  margin: .3em;
+  padding: 0;
+  border-radius: 4px;
+  display: flex;
+  align-items: stretch;
+  height: 1.8em;
+}
+
+.sheetList button:hover {
+  color: #2c3a41;
+  background-color: #e6e6e6;
+  left: .1em;
+}
+
+.sheetList button:active {
+  background-color: #525252;
+  color: #fafafa;
+}
+
+.sheetList button.selected {
+  background-color: black;
+  color: white;
+}
+
+.sheetList button.selected:hover {
+  background-color: rgb(179, 179, 179);
+  color: white;
+}
+
+.sheetList button.selected:active {
+  background-color: black;
+  color: white;
+}
+
+.sheetList .shortName {
+  align-self: center;
+}

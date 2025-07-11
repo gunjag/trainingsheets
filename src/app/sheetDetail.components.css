@@ -5,9 +5,11 @@ input[type="saveSheetButton"] {
     /* Add other styles as needed */
 }
 
-.container {
+.sheetContainer {
   display: flex;
-  align-items: right;
+  align-items: left;
+  font-size: 15px;
+  offset: 10px;
 }
 
 
@@ -15,4 +17,20 @@ button {
   margin-bottom: 10px;
 
   /* button styles go here */
+}
+
+label {
+  width: 140px;
+  text-align: left;
+  display: inline-block;
+}
+
+input {
+  width: 200px;
+  margin: .3em;
+}
+
+textarea {
+  width: 200px;
+  margin: .3em;
 }

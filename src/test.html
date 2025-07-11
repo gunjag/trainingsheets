@@ -1,0 +1,39 @@
+<html>
+    <head>
+        <h6>Testseite</h6>
+    </head>
+    <body>
+        Datum:
+        <input type="date" value="2025-04-05">
+        <script type="text/javascript">
+            function showDate() {
+                let br1 = document.createElement("dummy");
+                br1.innerHTML = "<br/>";
+                let node = document.createTextNode((new Date).toISOString());
+                document.body.appendChild(br1);
+
+                document.body.appendChild(node);
+                const utc = new Date().getSeconds();
+                let nodeSeconds = document.createTextNode(utc);
+                let br = document.createElement("dummy");
+                br.innerHTML = "<br/>";                document.body.appendChild(br);
+                document.body.appendChild(nodeSeconds);
+                return nodeSeconds.toISOString;
+            }
+
+            function showString(str) {
+                let br = document.createElement("dummy");
+                br.innerHTML = "<br/>";                document.body.appendChild(br);
+                document.body.appendChild(br);  
+                let node = document.createTextNode(str);
+                document.body.appendChild(node);  
+            }
+            //document.body.appendChild(document.body.createTextNode("<h5>Date is now: " + utc + "</h5>"));
+            for(let i = 0; i < 5; i++) {
+                let res = showDate();
+                setTimeout(showString, (i+1) * 1000, res);
+            }
+</script>
+        <br>
+    </body>
+</html>

@@ -1,60 +1,50 @@
 import { HttpClient } from "@angular/common/http";
-import { Component } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { ActiveService } from "./service/active-service";
+import { DataService } from "./service/data.service";
 import { FormsModule } from "@angular/forms";
 import { Sheet } from "./data/Sheet";
 
 @Component({
   selector: 'sheetDetail',
-  template: `
-    <div>
-      Name<input #myInput [(ngModel)]="name"><br>
-      Note<input #myInput [(ngModel)]="note"><br>
-      Text<input #myInput [(ngModel)]="text">
-      <button type="saveSheetButton" (click)="clickedSaveSheetButton(name,note,text)" clickable>Save</button>
-    </div>
-  `,
-    imports: [FormsModule],
+  templateUrl: './sheetDetail.components.html',
+  styleUrl: './sheetDetail.components.css',
+  imports: [FormsModule],
 })
 
 export class SheetDetailComponent {
 
  //<input [value]="name" (input)="name = ($event.target as HTMLInputElement).value"/>
 
-  name?: string;
-  note?: string;
-  text?: string;
+  @Input()  
+  set sheet(newSheet: Sheet) {
+    const x = JSON.stringify(newSheet);
+    this._sheet = JSON.parse(JSON.stringify(newSheet));
+  }
 
-  constructor(private httpClient: HttpClient, private activeService: ActiveService) {};
+  get sheet() {
+    return this._sheet;
+  }
+
+  _sheet: Sheet = new Sheet();
+
+  constructor(private httpClient: HttpClient, private activeService: ActiveService, private dataService: DataService) {};
 
   ngOnInit(): void {
-    this.name = 'erster Name';
-    this.note = 'erste Note';
-    this.text = 'erster Text';
+    /*
     this.activeService.currentSheet.subscribe(sheet => {
-      this.name = sheet?.shortName;
-      this.note = sheet?.note;
-      this.text = sheet?.htmlBody;
+      this.sheet = sheet as Sheet;
+      console.log("Detail Sheet: ", sheet);
     })
-
+      */
   }
 
-  onChangeName(value: string) {
-    this.name += value;
-    console.log(this.name);
-  }
-
-  onChangeNote(value: string) {
-    this.note += value;
-    console.log(this.note);
-  }
-
-  onChangeText(value: string) {
-    this.text += value;
-    console.log(this.text);
-  }
-  clickedSaveSheetButton(newName: any, newNote: any, newText: any) {
-    console.log("Save: ", newName, newNote, newText);
-    this.activeService.currentSheet.next({shortName: newName, note: newNote, htmlBody: newText })
+  clickedSaveSheetButton() {
+    if (this.sheet != null) {
+      console.log("Save: ", this.sheet);
+      //console.log("Save old: ", this.activeService.currentSheet.shortName);
+      //this.activeService.currentSheet.next({id: oldId, shortName: newName, note: newNote, htmlBody: newText })
+      this.dataService.editSheet(this.sheet);
+    }
   }
 }
