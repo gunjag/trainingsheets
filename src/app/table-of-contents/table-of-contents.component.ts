@@ -12,6 +12,7 @@ import { ActiveService } from '../service/active-service';
 import { SHEETS } from '../data/Mock-Data';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { DayQueryModalComponent } from './dayQueryModal.component';
+import { DayDatePickerQueryModalComponent } from './dayDatePickerQueryModal.component';
 import { FormsModule } from '@angular/forms';
 import { SheetQueryModalComponent } from './searchSheetQueryModal.component';
 
@@ -42,11 +43,19 @@ export class TableOfContentsComponent {
 
   getExerciseDays(): void {
     this.dataService.getExerciseDays().subscribe(exerciseDays => this.exerciseDays = exerciseDays);
+    this.sortExerciseDays();
   }
+
+  sortExerciseDays(): void {
+    this.exerciseDays = this.exerciseDays.sort((a, b) => (a.sort(b)));
+  }
+
   getSheets(): Sheet[] {
     this.dataService.getSheets().subscribe(sheets => this.sheets = sheets);
+    this.sheets = this.sheets.sort(function(a, b) { return a.shortName.localeCompare(b.shortName)});
     return this.sheets;
   }
+  
   selectDate(arg: ExerciseDay): void {
     console.log("clicked", arg);
     this.activeService.currentDate.next(arg);
@@ -61,7 +70,8 @@ export class TableOfContentsComponent {
   }
 
   showSheets(exDay: ExerciseDay) {
-    this.sheets = exDay.sheets as Sheet[];
+    //this.sheets = (exDay.sheets as Sheet[]).sort((a, b) => -1 * a.shortName.localeCompare(b.shortName));
+    this.sheets = (exDay.sheets as Sheet[]).sort(function(a, b) { return a.shortName.localeCompare(b.shortName)});
   }
 
   showSheetsTOC() {
@@ -120,6 +130,7 @@ export class TableOfContentsComponent {
     this.openDayQueryModal()
   }
 
+
   clickedDeleteExerciseButton() {
     if(this.activeExerciseDay === null) return;
     //let selExDay: ExerciseDay = this.activeService.currentDate.value as ExerciseDay;
@@ -135,21 +146,24 @@ export class TableOfContentsComponent {
     } else {
       return undefined;
     }
-    const dialogRef = this.dialog.open(DayQueryModalComponent, {
+
+    //Open Search dialog
+    const dialogRef = this.dialog.open(DayDatePickerQueryModalComponent, {
       width: '400px'
     });
-
-    const resultString = await dialogRef.afterClosed().toPromise();
-    console.log(resultString);
-    var day = this.makeDate(resultString);
-    console.log(day?.toLocaleDateString())
-    if(day === undefined) {
+  
+    const resultDate = await dialogRef.afterClosed().toPromise() as Date;
+    console.log(resultDate);
+    
+  //Work on with day in resultString
+    //var day = this.makeDate(resultString);
+    if(resultDate === undefined) {
       return undefined
     } else {
-      this.activeService.currentDate.value.date = day;
-      //this.activeService.currentDate.next({date: day});
+      this.activeService.currentDate.value.date = resultDate;
+      this.sortExerciseDays();
       this.dataService.editExperciseDay(selExDayId);
-      return day;
+      return resultDate;
     }
   }
 

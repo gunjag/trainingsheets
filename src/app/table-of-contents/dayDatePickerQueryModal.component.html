@@ -1,0 +1,11 @@
+<h2 mat-dialog-title>Enter Day (english format)</h2>
+<mat-dialog-content>
+    <mat-form-field>
+    <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDate" dateFormat="dd.MM.yyyy" placeholder="Choose a date">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker panelClass="datepicker"></mat-datepicker>
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button color="primary" (click)="onSubmit(selectedDate)">Save</button>
+</mat-dialog-actions>

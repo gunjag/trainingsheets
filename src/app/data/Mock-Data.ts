@@ -1,9 +1,30 @@
 import { Sheet } from "./Sheet";
 import { ExerciseDay } from "./ExerciseDay";
 
+const c: Sheet = {
+    id: 4,
+    shortName: 'c',
+    htmlBody: '',
+    note: ''
+};
+
+const a: Sheet = {
+    id: 5,
+    shortName: 'a',
+    htmlBody: '',
+    note: ''
+};
+
+const b: Sheet = {
+    id: 6,
+    shortName: 'b',
+    htmlBody: '',
+    note: ''
+};
+
 const s1: Sheet = {
     id: 1,
-    shortName: 'Sheet 11',
+    shortName: 'Sheet a11',
     htmlBody: '<body>Sheet1</body>',
     note: 'note text 1'
 };
@@ -35,5 +56,5 @@ const e2 = new ExerciseDay (
 );
 
 export const EXERCISEDAYS: ExerciseDay [] = [e1, e2];
-export const SHEETS: Sheet [] = [s1, s2, s3];
+export const SHEETS: Sheet [] = [s1, s2, s3, c, a, b];
 
