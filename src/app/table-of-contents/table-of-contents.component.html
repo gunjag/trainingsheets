@@ -1,5 +1,10 @@
 <div class="grid-container" style="line-height: normal">
   <div class="header">Training Sheets</div>
+  <div class="admin">
+    <div class="appButtons">
+      <button type="adminButton" [class]="isAdmin? 'fullFeature':'noFeature'" (click)="clickedAdminButton()" clickable>Admin</button>
+    </div>
+  </div>
   <div class="exerciseDays">
     <h6>Calender</h6>
     <li *ngFor="let exerciseDay of exerciseDays"routerLink="/{{exerciseDay.date | date:'dd.MM.yyyy'}}">
@@ -17,21 +22,23 @@
     <div class="flex-column">
       <button [class.selected]="showTOC === false" [disabled]="true" (click)="openSheetListOneDay()" >Day {{this.activeExerciseDay.date | date:'dd.MM.yyyy'}}</button>
     </div>
-    <div class="flex-column">
+    <div class="flex-column" *ngIf="isAdmin">
       <button [class.selected]="showTOC === true" (click)="openSheetListTOC()">Table of Contents</button>
     </div>
   </div>
   <div class="sheetList">
-        <h6>Sheets</h6>
-    <li *ngFor="let sheet of sheets" class="col-1-4" routerLink="/{{sheet.shortName}}">
-      <button [class.selected]="sheet === activeSheet" (click)="selectSheet(sheet)" clickable>
-        <span>{{sheet.shortName}}</span>
-      </button>
-    </li>
+    <h6>Sheets</h6>
+    <div *ngIf="showSheetList">
+      <li *ngFor="let sheet of sheets" class="col-1-4" routerLink="/{{sheet.shortName}}" >
+        <button [class.selected]="sheet === activeSheet" (click)="selectSheet(sheet)" clickable>
+          <span>{{sheet.shortName}}</span>
+        </button>
+      </li>
+    </div>
   </div>
   <div class="appButtons">
     <button type="addSheetButton" (click)="clickedAddSheetButton()" clickable>Add</button>
-    <button type="newSheetButton" (click)="clickedNewSheetButton()" clickable>New</button>
+    <button type="newSheetButton" [disabled]="activeExerciseDay === null" (click)="clickedNewSheetButton()" clickable>New</button>
     <button type="deleteSheetButton" (click)="clickedDeleteSheetButton()" clickable>Delete</button>
   </div>
 

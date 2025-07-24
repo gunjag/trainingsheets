@@ -31,7 +31,7 @@ export class TableOfContentsComponent {
   readonly dialog = inject(MatDialog);
   activeSheet: Sheet = new Sheet();
   activeExerciseDay: ExerciseDay = new ExerciseDay;
-  showTOC: boolean = true;
+  showTOC: boolean = false;
      
   constructor(private dialogRef: MatDialogRef<TableOfContentsComponent>, private dataService: DataService, public activeService: ActiveService) {
   }
@@ -39,6 +39,16 @@ export class TableOfContentsComponent {
   ngOnInit(): void {
     this.getExerciseDays();
     this.getSheets();
+    this.showFirstDay();
+  }
+
+  showFirstDay() {
+    let firstDay = null;
+    if(this.exerciseDays.length > 0) firstDay = this.exerciseDays[0];
+    if(firstDay != null) {
+      this.activeService.currentDate.next(firstDay);
+      this.selectDate(firstDay);
+    }
   }
 
   getExerciseDays(): void {
@@ -205,5 +215,22 @@ export class TableOfContentsComponent {
     console.log("Pressed TOC", this.activeExerciseDay)
     if(!this.showTOC) this.showTOC = true;
     this.showSheetsTOC();
+  }
+
+  clickedAdminButton() {
+    if(this.isAdmin) {
+      this.activeService.isAdmin = false;
+      this.showFirstDay();
+    } else {
+      this.activeService.isAdmin = true;
+    }        
+  }
+
+  get isAdmin() {
+    return this.activeService.isAdmin;
+  }
+
+  get showSheetList() {
+    return (this.showTOC && this.isAdmin) || !this.showTOC;
   }
 }

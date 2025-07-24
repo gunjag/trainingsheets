@@ -1,7 +1,7 @@
 .grid-container {
   display: grid;
   grid-template-areas:
-    'header header header'
+    'header header admin'
     'exerciseDays sheetListButtons sheetDetailCompo'
     'exerciseDays sheetList sheetDetailCompo'
     'appButtons appButtons sheetDetailCompo';
@@ -10,6 +10,7 @@
   padding: 1px;
 }
 
+.admin { grid-area: admin; }
 .header { grid-area: header; }
 .exerciseDays { grid-area: exerciseDays; }
 .sheetListButtons { grid-area: sheetListButtons; }
@@ -25,6 +26,13 @@
 }
 
 /* exerciseDays */
+
+.fullFeature {
+  color: #040404;
+}
+.noFeature {
+  color: #aeadad;
+}
 
 .exerciseDays {
   margin: 0 0 0 0;

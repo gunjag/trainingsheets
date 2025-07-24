@@ -4,12 +4,13 @@ import { ActiveService } from "./service/active-service";
 import { DataService } from "./service/data.service";
 import { FormsModule } from "@angular/forms";
 import { Sheet } from "./data/Sheet";
+import { CommonModule } from "@angular/common";
 
 @Component({
   selector: 'sheetDetail',
   templateUrl: './sheetDetail.components.html',
   styleUrl: './sheetDetail.components.css',
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
 })
 
 export class SheetDetailComponent {
@@ -46,5 +47,13 @@ export class SheetDetailComponent {
       //this.activeService.currentSheet.next({id: oldId, shortName: newName, note: newNote, htmlBody: newText })
       this.dataService.editSheet(this.sheet);
     }
+  }
+
+  get isAdmin() {
+    return this.activeService.isAdmin;
+  }
+
+  get noteIsNotEmpty() {
+    return this.sheet.note != null;
   }
 }

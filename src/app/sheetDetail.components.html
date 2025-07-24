@@ -1,15 +1,22 @@
-    <div class="sheetContainer">
+    <div class="sheetContainer" *ngIf="isAdmin">
         <form>
             <label for="sheet-id">Id</label><input id="sheet-id" disabled="true" [(ngModel)]="sheet.id" name="sheetId"/><br>
             <label for="sheet-name">Name</label><input id="sheet-id" required [(ngModel)]="sheet.shortName" name="sheetShortName"/><br>
             <label for="sheet-note">Note</label><textarea for="sheet-note" cols="0" rows="3" [(ngModel)]="sheet.note" name="sheetNote"></textarea><br>
             <label for="sheet-htmlBody">Beschreibung Html</label><textarea for="sheet-htmlBody" cols="0" rows="3" [(ngModel)]="sheet.htmlBody" name="sheetHtmlBody"></textarea>
-            <div [innerHtml]="this.sheet.htmlBody"></div>
         </form>
     </div>
     <div class="filler">
     </div>
-    <div class="appButtons">
+    <div class="appButtons" *ngIf="isAdmin">
         <button type="saveSheetButton" (click)="clickedSaveSheetButton()" clickable>Save</button>
     </div>
-    
+    <div class="sheetShow">
+        <form>
+            <div [innerHtml]="this.sheet.htmlBody"></div>
+            <br>
+            <div *ngIf="noteIsNotEmpty">
+                Note:<div [innerHtml]="this.sheet.note"></div>
+            </div>
+        </form>
+    </div>
