@@ -51,7 +51,7 @@
   left: 0;
   background-color: #EEE;
   margin: .3em;
-  padding: 0;
+  padding: 0.2em 0.2em;
   border-radius: 4px;
   display: flex;
   align-items: stretch;
@@ -104,34 +104,38 @@
   left: 0;
   background-color: #EEE;
   margin: .3em;
-  padding: 0;
-  border-radius: 4px;
-
+  padding: 0.2em 0.2em;
   height: 1.8em;
+  border-radius: 10px;
 }
 
 .sheetListButtons button:hover {
   color: #2c3a41;
   background-color: #e6e6e6;
   left: .1em;
+  border-radius: 10px;
 }
 
 .sheetListButtons button:active {
   background-color: #525252;
   color: #fafafa;
+  border-radius: 10px;
 }
 
 .sheetListButtons button.selected {
   background-color: black;
   color: white;
+  border-radius: 10px;
 }
 
 .sheetListButtons button.selected:hover {
   background-color: rgb(179, 179, 179);
   color: white;
+  border-radius: 10px;
 }
 
 .sheetListButtons button.selected:active {
   background-color: black;
   color: white;
+  border-radius: 10px;
 }

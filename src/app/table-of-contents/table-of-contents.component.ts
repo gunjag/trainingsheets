@@ -17,11 +17,13 @@ import { FormsModule } from '@angular/forms';
 import { SheetQueryModalComponent } from './searchSheetQueryModal.component';
 import { MatListModule, MatListItem, MatListItemIcon } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon'
+import { MatButtonModule } from '@angular/material/button'
+import {MatCardModule} from '@angular/material/card';
 
 
 @Component({
   selector: 'app-table-of-contents',
-  imports: [ CommonModule, RouterModule, FormsModule, NgFor, SheetDetailComponent, MatListModule, MatIconModule ],  
+  imports: [ CommonModule, RouterModule, FormsModule, NgFor, SheetDetailComponent, MatListModule, MatIconModule, MatButtonModule, MatCardModule ],  
   templateUrl: './table-of-contents.component.html',
   styleUrl: './table-of-contents.component.css',
   providers: [ { provide: MatDialogRef,useValue: {} } ]
