@@ -15,10 +15,13 @@ import { DayQueryModalComponent } from './dayQueryModal.component';
 import { DayDatePickerQueryModalComponent } from './dayDatePickerQueryModal.component';
 import { FormsModule } from '@angular/forms';
 import { SheetQueryModalComponent } from './searchSheetQueryModal.component';
+import { MatListModule, MatListItem, MatListItemIcon } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon'
+
 
 @Component({
   selector: 'app-table-of-contents',
-  imports: [ CommonModule, RouterModule, FormsModule, NgFor, SheetDetailComponent ],  
+  imports: [ CommonModule, RouterModule, FormsModule, NgFor, SheetDetailComponent, MatListModule, MatIconModule ],  
   templateUrl: './table-of-contents.component.html',
   styleUrl: './table-of-contents.component.css',
   providers: [ { provide: MatDialogRef,useValue: {} } ]
