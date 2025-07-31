@@ -1,57 +1,70 @@
-<div class="grid-container" style="line-height: normal">
-  <div class="header">Training Sheets</div>
-  <div class="admin">
+<div>
+  <mat-card class="cardTop">
+    <mat-card-title>Training Sheets</mat-card-title>
     <div class="appButtons">
       <button type="adminButton" [class]="isAdmin? 'fullFeature':'noFeature'" (click)="clickedAdminButton()" clickable>Admin</button>
     </div>
-  </div>
-  <div class="exerciseDays">
-    <h6>Calender</h6>
-    <li *ngFor="let exerciseDay of exerciseDays"routerLink="/{{exerciseDay.date | date:'dd.MM.yyyy'}}">
-      <button [class.selected]="exerciseDay === activeExerciseDay" type="button" (click)="selectDate(exerciseDay)">
-        <span class="date">{{exerciseDay.date | date:'dd.MM.yyyy' }}</span>
-      </button>
-    </li>
-    <!-- <mat-action-list>
-      @for (exerciseDay of exerciseDays; track $index) {
-        <mat-list-item [class.selected]="exerciseDay === activeExerciseDay" type="button" (click)="selectDate(exerciseDay)" routerLink="/{{exerciseDay.date | date:'dd.MM.yyyy'}}">
-          <mat-icon mat-list-icon>today</mat-icon>
-          {{exerciseDay.date | date:'dd.MM.yyyy' }}
-        </mat-list-item>
-      }
-    </mat-action-list> -->
-  </div>
-  <div class="appButtons">
-    <button type="newExerciseDayButton" (click)="clickedNewExerciseButton()" clickable>New</button>
-    <button type="editExerciseDayButton" (click)="clickedEditExerciseButton()" clickable>Edit</button>
-    <button type="deleteExerciseDayButton" (click)="clickedDeleteExerciseButton()" clickable>Delete</button>
-  </div>
-  <div class="sheetListButtons">
-    <div class="flex-column">
-      <button [class.selected]="showTOC === false" [disabled]="true" (click)="openSheetListOneDay()" >Day {{this.activeExerciseDay.date | date:'dd.MM.yyyy'}}</button>
-    </div>
-    <div class="flex-column" *ngIf="isAdmin">
-      <button [class.selected]="showTOC === true" (click)="openSheetListTOC()">Table of Contents</button>
-    </div>
-  </div>
-  <div class="sheetList">
-    <h6>Sheets</h6>
-    <div *ngIf="showSheetList">
-      <li *ngFor="let sheet of sheets" class="col-1-4" routerLink="/{{sheet.shortName}}" >
-        <button [class.selected]="sheet === activeSheet" (click)="selectSheet(sheet)" clickable>
-          <span>{{sheet.shortName}}</span>
-        </button>
-      </li>
-    </div>
-  </div>
-  <div class="appButtons">
-    <button type="addSheetButton" (click)="clickedAddSheetButton()" clickable>Add</button>
-    <button type="newSheetButton" [disabled]="activeExerciseDay === null" (click)="clickedNewSheetButton()" clickable>New</button>
-    <button type="deleteSheetButton" (click)="clickedDeleteSheetButton()" clickable>Delete</button>
-  </div>
-
-  <div class="sheetDetailCompo">
-    <sheetDetail [sheet]="this.activeSheet"></sheetDetail>
-  </div>
+  </mat-card>
+  <mat-card class="cardsDaysSheetsDetail">
+      <mat-card class="cardLeft">
+        <mat-card-content>
+          <div class="exerciseDays">
+            <mat-card-title>Calender</mat-card-title>
+            <li *ngFor="let exerciseDay of exerciseDays"routerLink="/{{exerciseDay.date | date:'dd.MM.yyyy'}}">
+              <button [class.selected]="exerciseDay === activeExerciseDay" type="button" (click)="selectDate(exerciseDay)">
+                <span class="date">{{exerciseDay.date | date:'dd.MM.yyyy' }}</span>
+              </button>
+            </li>
+            <!-- <mat-action-list>
+              @for (exerciseDay of exerciseDays; track $index) {
+                <mat-list-item [class.selected]="exerciseDay === activeExerciseDay" type="button" (click)="selectDate(exerciseDay)" routerLink="/{{exerciseDay.date | date:'dd.MM.yyyy'}}">
+                  <mat-icon mat-list-icon>today</mat-icon>
+                  {{exerciseDay.date | date:'dd.MM.yyyy' }}
+                </mat-list-item>
+              }
+            </mat-action-list> -->
+          </div>
+          <div class="appButtons">
+            <button type="newExerciseDayButton" (click)="clickedNewExerciseButton()" clickable>New</button>
+            <button type="editExerciseDayButton" (click)="clickedEditExerciseButton()" clickable>Edit</button>
+            <button type="deleteExerciseDayButton" (click)="clickedDeleteExerciseButton()" clickable>Delete</button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="cardMiddle">
+        <mat-card-content>
+          <div class="sheetListButtons">
+            <div>
+              <button [class.selected]="showTOC === false" [disabled]="true" (click)="openSheetListOneDay()" >Day {{this.activeExerciseDay.date | date:'dd.MM.yyyy'}}</button>
+            </div>
+            <div *ngIf="isAdmin">
+              <button [class.selected]="showTOC === true" (click)="openSheetListTOC()">Table of Contents</button>
+            </div>
+          </div>
+          <div class="sheetList">
+            <mat-card-title>Sheets</mat-card-title>
+            <div *ngIf="showSheetList">
+              <li *ngFor="let sheet of sheets" routerLink="/{{sheet.shortName}}" >
+                <button [class.selected]="sheet === activeSheet" (click)="selectSheet(sheet)" clickable>
+                  <span>{{sheet.shortName}}</span>
+                </button>
+              </li>
+            </div>
+          </div>
+          <div class="appButtons">
+            <button type="addSheetButton" (click)="clickedAddSheetButton()" clickable>Add</button>
+            <button type="newSheetButton" [disabled]="activeExerciseDay === null" (click)="clickedNewSheetButton()" clickable>New</button>
+            <button type="deleteSheetButton" (click)="clickedDeleteSheetButton()" clickable>Delete</button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="cardRight">
+        <mat-card-content>
+          <div class="sheetDetailCompo">
+            <sheetDetail [sheet]="this.activeSheet"></sheetDetail>
+          </div>
+        </mat-card-content>
+      </mat-card>
+  </mat-card>
 </div>
 

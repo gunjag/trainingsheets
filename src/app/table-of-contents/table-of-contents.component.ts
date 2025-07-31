@@ -18,7 +18,7 @@ import { SheetQueryModalComponent } from './searchSheetQueryModal.component';
 import { MatListModule, MatListItem, MatListItemIcon } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon'
 import { MatButtonModule } from '@angular/material/button'
-import {MatCardModule} from '@angular/material/card';
+import { MatCardModule } from '@angular/material/card';
 
 
 @Component({
