@@ -3,6 +3,9 @@
     <mat-card-title>Training Sheets</mat-card-title>
     <div class="appButtons">
       <button type="adminButton" [class]="isAdmin? 'fullFeature':'noFeature'" (click)="clickedAdminButton()" clickable>Admin</button>
+      <button type="exportButton" [class]="isAdmin? 'fullFeature':'noFeature'" [disabled]="!isAdmin" (click)="clickedExportButton()" clickable>Export</button>
+      <button type="importButton" [class]="isAdmin? 'fullFeature':'noFeature'" [disabled]="!isAdmin" (click)="fileInput.click()" clickable>Import</button>
+      <input #fileInput type="file" accept=".json" style="display:none" (change)="clickedImportButton($event)">
     </div>
   </mat-card>
   <mat-card class="cardsDaysSheetsDetail">

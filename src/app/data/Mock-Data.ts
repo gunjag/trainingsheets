@@ -58,7 +58,7 @@ htmlBody = '<body><h2>' + header +
             '" height="100" width="100" alt="Bild kann nicht geladen werden." border="3" align="center">' + htmlText +
             '</body>';
 
-const sBrustmuskel: Sheet = new Sheet(3, header, note, htmlBody);
+const sBrustmuskel: Sheet = new Sheet(4, header, note, htmlBody);
 
 header = 'Hüftbeuger';
 note = 'Halten der Position für 5 Sekunden. Wiederholungen: 5x';
@@ -69,7 +69,7 @@ htmlBody = '<body><h2>' + header +
             '" height="100" width="100" alt="Bild kann nicht geladen werden." border="3" align="center">' + htmlText +
             '</body>';
 
-const sHueftbeuger: Sheet = new Sheet(3, header, note, htmlBody);
+const sHueftbeuger: Sheet = new Sheet(5, header, note, htmlBody);
 
 const e1 = new ExerciseDay (
     1,

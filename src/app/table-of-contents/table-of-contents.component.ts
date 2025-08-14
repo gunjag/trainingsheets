@@ -19,7 +19,7 @@ import { MatListModule, MatListItem, MatListItemIcon } from '@angular/material/l
 import { MatIconModule } from '@angular/material/icon'
 import { MatButtonModule } from '@angular/material/button'
 import { MatCardModule } from '@angular/material/card';
-
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-table-of-contents',
@@ -38,7 +38,11 @@ export class TableOfContentsComponent {
   activeExerciseDay: ExerciseDay = new ExerciseDay;
   showTOC: boolean = false;
      
-  constructor(private dialogRef: MatDialogRef<TableOfContentsComponent>, private dataService: DataService, public activeService: ActiveService) {
+  constructor(
+    private dialogRef: MatDialogRef<TableOfContentsComponent>,
+    private dataService: DataService,
+    public activeService: ActiveService,
+    private httpClient: HttpClient) {
   }
 
   ngOnInit(): void {
@@ -229,6 +233,39 @@ export class TableOfContentsComponent {
     } else {
       this.activeService.isAdmin = true;
     }        
+  }
+
+  clickedImportButton(event: Event) {
+    console.log("import");
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length) return;
+    const file = input.files[0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(reader.result as string);
+        console.log('Imported data:', data);
+        // Do something with the data
+        this.exerciseDays = data[0];
+        this.dataService.putSheets(data[1]);
+      } catch (e) {
+        console.error('Invalid JSON file', e);
+      }
+    };
+    reader.readAsText(file);
+  }
+   
+  clickedExportButton() {
+    const daysAndSheets: [ Array<ExerciseDay>, Array<Sheet> ] = [ this.exerciseDays, this.sheets ];
+    console.log("export");
+    const jsonString = JSON.stringify(daysAndSheets);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'allObjects.json';
+    a.click();
+    window.URL.revokeObjectURL(url);
   }
 
   get isAdmin() {

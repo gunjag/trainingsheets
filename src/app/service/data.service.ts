@@ -14,6 +14,7 @@ export class DataService {
 
   public currentSheet = new BehaviorSubject<Sheet|null>(null);
   public currentDate = new BehaviorSubject<ExerciseDay|null>(null);
+  private allSheets: Sheet[] = [];
   constructor(private messageService: MessageService, private activeService: ActiveService) { }
 
   getExerciseDays(): Observable<ExerciseDay[]> {
@@ -25,15 +26,24 @@ export class DataService {
     const exerciseDay = EXERCISEDAYS.find(ex => ex.id === id)!;
     return of(exerciseDay);
   }
+
+  putSheets(s: Sheet[]) {
+    this.allSheets = s;
+  }
+
   getSheets(): Observable<Sheet[]> {
-    const sheets = of(SHEETS);
+    if(this.allSheets.length == 0) {
+      this.putSheets(SHEETS);
+    };
+    var sheets: Observable<Sheet[]>;
+    sheets = of(this.allSheets);
     return sheets;
   }
   getSheetsNotObserved(): Sheet[] {
-    return SHEETS;
+    return this.allSheets;
   }
   getSheet(shortName: string): Observable<Sheet> {
-    const sheet = SHEETS.find(sh => sh.shortName === shortName)!;
+    const sheet = this.allSheets.find(sh => sh.shortName === shortName)!;
     return of(sheet);
   }
   editSheet(selSheet: Sheet) {
@@ -41,9 +51,9 @@ export class DataService {
     if(!(selSheet===null)) {
       const index = SHEETS.findIndex(sh => sh.id === selSheet.id);
       //SHEETS[index] = { ...selSheet };
-      (SHEETS[index]).shortName = selSheet.shortName;
-      (SHEETS[index]).htmlBody = selSheet.htmlBody;
-      (SHEETS[index]).note = selSheet.note;
+      (this.allSheets[index]).shortName = selSheet.shortName;
+      (this.allSheets[index]).htmlBody = selSheet.htmlBody;
+      (this.allSheets[index]).note = selSheet.note;
 
     }
   }
@@ -59,7 +69,7 @@ export class DataService {
 
   getNextSheetId(): number {
     var highest: number = 0;
-    SHEETS.forEach(sheet => {
+    this.allSheets.forEach(sheet => {
       if ((sheet.id != null) && (sheet.id > highest)) { highest = sheet.id };
     });
     return highest + 1;
