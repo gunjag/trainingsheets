@@ -256,7 +256,7 @@ export class TableOfContentsComponent {
   }
    
   clickedExportButton() {
-    const daysAndSheets: [ Array<ExerciseDay>, Array<Sheet> ] = [ this.exerciseDays, this.sheets ];
+    const daysAndSheets: [ Array<ExerciseDay>, Array<Sheet> ] = [ this.exerciseDays, this.dataService.getSheetsNotObserved() ];
     console.log("export");
     const jsonString = JSON.stringify(daysAndSheets);
     const blob = new Blob([jsonString], { type: 'application/json' });
