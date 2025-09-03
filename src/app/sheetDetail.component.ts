@@ -3,7 +3,7 @@ import { Component, Input } from "@angular/core";
 import { ActiveService } from "./service/active-service";
 import { DataService } from "./service/data.service";
 import { FormsModule } from "@angular/forms";
-import { Sheet } from "./data/Sheet";
+import { Sheet } from "./model/Sheet";
 import { CommonModule } from "@angular/common";
 
 @Component({

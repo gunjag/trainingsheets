@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { ExerciseDay } from '../data/ExerciseDay';
-import { Sheet } from '../data/Sheet';
-import { EXERCISEDAYS } from '../data/Mock-Data';
-import { SHEETS } from '../data/Mock-Data';
+import { ExerciseDay } from '../model/ExerciseDay';
+import { Sheet } from '../model/Sheet';
+import { EXERCISEDAYS } from '../model/Mock-Data';
+import { SHEETS } from '../model/Mock-Data';
 import { BehaviorSubject, expand, Observable, of } from 'rxjs';
 import { MessageService } from '../message.service';
 import { ActiveService } from './active-service';
@@ -15,18 +15,27 @@ export class DataService {
   public currentSheet = new BehaviorSubject<Sheet|null>(null);
   public currentDate = new BehaviorSubject<ExerciseDay|null>(null);
   private allSheets: Sheet[] = [];
+  private allExerciseDays: ExerciseDay[] = [];
   constructor(private messageService: MessageService, private activeService: ActiveService) { }
 
   getExerciseDays(): Observable<ExerciseDay[]> {
-    const exerciseDays = of(EXERCISEDAYS);
+    if(this.allExerciseDays.length == 0) {
+      this.putExerciseDays(EXERCISEDAYS);
+    };
     this.messageService.add('DataService: Fetched ExerciseDays from Mock-Data');
+    var exerciseDays: Observable<ExerciseDay[]>;
+    exerciseDays = of(this.allExerciseDays);
     return exerciseDays;
   }
+
   getExerciseDay(id: number): Observable<ExerciseDay> {
     const exerciseDay = EXERCISEDAYS.find(ex => ex.id === id)!;
     return of(exerciseDay);
   }
 
+  putExerciseDays(s: ExerciseDay[]) {
+    this.allExerciseDays = s;
+  }
   putSheets(s: Sheet[]) {
     this.allSheets = s;
   }

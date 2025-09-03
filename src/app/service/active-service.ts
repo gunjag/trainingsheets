@@ -1,7 +1,7 @@
 import { Component, Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
-import { Sheet } from "../data/Sheet";
-import { ExerciseDay } from "../data/ExerciseDay";
+import { Sheet } from "../model/Sheet";
+import { ExerciseDay } from "../model/ExerciseDay";
 
 @Injectable({
     providedIn: 'root' // Singleton

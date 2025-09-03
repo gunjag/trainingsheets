@@ -3,7 +3,7 @@ import { CommonModule, NgFor } from '@angular/common';
 import { MatDialog, MatDialogModule, MatDialogRef, MatDialogActions, MatDialogContent, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Sheet } from '../data/Sheet';
+import { Sheet } from '../model/Sheet';
 
 @Component({
     selector: 'app-query-modal',

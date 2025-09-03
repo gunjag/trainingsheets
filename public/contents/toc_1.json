@@ -1,0 +1,24 @@
+{
+    "contents": [
+        {
+            "uid": "1",
+            "title": "Atmung",
+            "urlOrPath": "dlrg/atmung.html"
+        },
+        {
+            "uid": "2",
+            "title": "Brustschwimmen mit Pullbuoy II",
+            "urlOrPath": "dlrg/brustschwimmenMitPullbuoy.html"
+        },
+        {
+            "uid": "3",
+            "title": "Kraulschwimmen",
+            "urlOrPath": "dlrg/kraulschwimmen.html"
+        },
+        {
+            "uid": "4",
+            "title": "Delphinschwimmen",
+            "urlOrPath": "dlrg/delphinschwimmen.html"
+        }
+    ]
+}

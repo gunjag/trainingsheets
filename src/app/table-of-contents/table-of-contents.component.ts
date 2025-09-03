@@ -2,28 +2,35 @@ import { CommonModule, NgFor } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { formatDate } from '@angular/common';
 import { RouterModule, RouterLink, RouterLinkActive } from '@angular/router';
-import { DataService } from '../service/data.service';
-import { ExerciseDay } from '../data/ExerciseDay';
-import { Sheet } from '../data/Sheet';
+
+import { ExerciseDay } from '../model/ExerciseDay';
+import { Sheet } from '../model/Sheet';
+import { SHEETS } from '../model/Mock-Data';
 import { SheetDetailComponent } from '../sheetDetail.component';
 import { NEVER, Observable } from 'rxjs';
 import { BehaviorSubject } from "rxjs";
+
+import { DataService } from '../service/data.service';
 import { ActiveService } from '../service/active-service';
-import { SHEETS } from '../data/Mock-Data';
+import { ToCService } from '../toc.service';
+
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { DayQueryModalComponent } from './dayQueryModal.component';
 import { DayDatePickerQueryModalComponent } from './dayDatePickerQueryModal.component';
 import { FormsModule } from '@angular/forms';
 import { SheetQueryModalComponent } from './searchSheetQueryModal.component';
+
 import { MatListModule, MatListItem, MatListItemIcon } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon'
 import { MatButtonModule } from '@angular/material/button'
 import { MatCardModule } from '@angular/material/card';
+import { MatTabsModule, MatTabChangeEvent } from '@angular/material/tabs';
+
 import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-table-of-contents',
-  imports: [ CommonModule, RouterModule, FormsModule, NgFor, SheetDetailComponent, MatListModule, MatIconModule, MatButtonModule, MatCardModule ],  
+  imports: [ CommonModule, RouterModule, FormsModule, NgFor, SheetDetailComponent, MatTabsModule, MatListModule, MatIconModule, MatButtonModule, MatCardModule ],  
   templateUrl: './table-of-contents.component.html',
   styleUrl: './table-of-contents.component.css',
   providers: [ { provide: MatDialogRef,useValue: {} } ]
@@ -37,17 +44,22 @@ export class TableOfContentsComponent {
   activeSheet: Sheet = new Sheet();
   activeExerciseDay: ExerciseDay = new ExerciseDay;
   showTOC: boolean = false;
+  tabSelection: number = 1;
      
   constructor(
     private dialogRef: MatDialogRef<TableOfContentsComponent>,
     private dataService: DataService,
     public activeService: ActiveService,
-    private httpClient: HttpClient) {
+    private httpClient: HttpClient,
+    private tocService: ToCService) {
   }
 
   ngOnInit(): void {
     this.getExerciseDays();
     this.getSheets();
+    //this.showFirstDay();
+    this.activeService.isAdmin=false;
+    this.tabSelection = 0;
     this.showFirstDay();
   }
 
@@ -76,7 +88,6 @@ export class TableOfContentsComponent {
   }
   
   selectDate(arg: ExerciseDay): void {
-    console.log("clicked", arg);
     this.activeService.currentDate.next(arg);
     this.activeExerciseDay = arg;
     this.activeSheet = new Sheet();
@@ -84,7 +95,6 @@ export class TableOfContentsComponent {
     this.showSheets(arg);
   }
   selectSheet(arg: Sheet): void {
-    console.log("clicked", arg);
     this.activeSheet = arg;
   }
 
@@ -94,7 +104,7 @@ export class TableOfContentsComponent {
   }
 
   showSheetsTOC() {
-    this.activeExerciseDay = new ExerciseDay();
+    //this.activeExerciseDay = new ExerciseDay();
     this.getSheets();
   }
 
@@ -216,26 +226,32 @@ export class TableOfContentsComponent {
 
   openSheetListOneDay() {
     console.log("Pressed One Day", this.activeExerciseDay)
-    // if(this.showTOC) this.showTOC = false;
-    // this.showSheets(this.activeExerciseDay);
+    if(this.showTOC) this.showTOC = false;
+    this.showSheets(this.activeExerciseDay);
   }
 
   openSheetListTOC() {
-    console.log("Pressed TOC", this.activeExerciseDay)
+    this.activeExerciseDay == null;
+    console.log("Pressed TOC");
     if(!this.showTOC) this.showTOC = true;
     this.showSheetsTOC();
+  }
+
+  changeTab(event: MatTabChangeEvent) {
+    console.log(event.tab);
+    if(event.index == 0) this.openSheetListOneDay();
+    if(event.index == 1) this.openSheetListTOC();
   }
 
   clickedAdminButton() {
     if(this.isAdmin) {
       this.activeService.isAdmin = false;
-      this.showFirstDay();
     } else {
       this.activeService.isAdmin = true;
-    }        
+    }   
   }
 
-  clickedImportButton(event: Event) {
+  clickedImportJsonButton(event: Event) {
     console.log("import");
     const input = event.target as HTMLInputElement;
     if (!input.files?.length) return;
@@ -246,8 +262,10 @@ export class TableOfContentsComponent {
         const data = JSON.parse(reader.result as string);
         console.log('Imported data:', data);
         // Do something with the data
+        this.dataService.putExerciseDays(data[0]);
         this.exerciseDays = data[0];
         this.dataService.putSheets(data[1]);
+        this.sheets = data[1];
       } catch (e) {
         console.error('Invalid JSON file', e);
       }
@@ -255,7 +273,7 @@ export class TableOfContentsComponent {
     reader.readAsText(file);
   }
    
-  clickedExportButton() {
+  clickedExportJsonButton() {
     const daysAndSheets: [ Array<ExerciseDay>, Array<Sheet> ] = [ this.exerciseDays, this.dataService.getSheetsNotObserved() ];
     console.log("export");
     const jsonString = JSON.stringify(daysAndSheets);
@@ -268,11 +286,24 @@ export class TableOfContentsComponent {
     window.URL.revokeObjectURL(url);
   }
 
+  clickedImportHtmlButton() {
+    console.log("import html");
+    var importedSheets: Sheet[] = this.tocService.loadTocAsSheets();
+    this.dataService.putSheets(importedSheets);
+    this.sheets = importedSheets;
+  }
+
   get isAdmin() {
     return this.activeService.isAdmin;
   }
 
   get showSheetList() {
-    return (this.showTOC && this.isAdmin) || !this.showTOC;
+    //return (this.showTOC && this.isAdmin) || !this.showTOC;
+    return true;
+  }
+
+  isDaySelected(): boolean {
+    //this.activeService.currentDate.value != null;
+    return true;
   }
 }
