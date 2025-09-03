@@ -55,9 +55,9 @@ export class TableOfContentsComponent {
   }
 
   ngOnInit(): void {
+    this.dataService.fillDataFromMockData();
     this.getExerciseDays();
     this.getSheets();
-    //this.showFirstDay();
     this.activeService.isAdmin=false;
     this.tabSelection = 0;
     this.showFirstDay();
@@ -73,7 +73,7 @@ export class TableOfContentsComponent {
   }
 
   getExerciseDays(): void {
-    this.dataService.getExerciseDays().subscribe(exerciseDays => this.exerciseDays = exerciseDays);
+    this.dataService.getAllExerciseDays().subscribe(exerciseDays => this.exerciseDays = exerciseDays);
     this.sortExerciseDays();
   }
 
@@ -82,9 +82,13 @@ export class TableOfContentsComponent {
   }
 
   getSheets(): Sheet[] {
-    this.dataService.getSheets().subscribe(sheets => this.sheets = sheets);
-    this.sheets = this.sheets.sort(function(a, b) { return a.shortName.localeCompare(b.shortName)});
+    this.dataService.getAllSheets().subscribe(sheets => this.sheets = sheets);
+    this.sortSheets();
     return this.sheets;
+  }
+
+  sortSheets(): void {
+    this.sheets = this.sheets.sort(function(a, b) { return a.shortName.localeCompare(b.shortName)});
   }
   
   selectDate(arg: ExerciseDay): void {
@@ -205,7 +209,7 @@ export class TableOfContentsComponent {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.width = '400px';
     dialogConfig.height = '600px';
-    dialogConfig.data = this.dataService.getSheetsNotObserved();
+    dialogConfig.data = this.dataService.getAllSheetsNotObserved();
     const dialogRef = this.dialog.open(SheetQueryModalComponent, dialogConfig);
 
     const resultSheet = await dialogRef.afterClosed().toPromise();
@@ -262,9 +266,9 @@ export class TableOfContentsComponent {
         const data = JSON.parse(reader.result as string);
         console.log('Imported data:', data);
         // Do something with the data
-        this.dataService.putExerciseDays(data[0]);
+        this.dataService.putAllExerciseDays(data[0]);
         this.exerciseDays = data[0];
-        this.dataService.putSheets(data[1]);
+        this.dataService.putAllSheets(data[1]);
         this.sheets = data[1];
       } catch (e) {
         console.error('Invalid JSON file', e);
@@ -274,7 +278,7 @@ export class TableOfContentsComponent {
   }
    
   clickedExportJsonButton() {
-    const daysAndSheets: [ Array<ExerciseDay>, Array<Sheet> ] = [ this.exerciseDays, this.dataService.getSheetsNotObserved() ];
+    const daysAndSheets: [ Array<ExerciseDay>, Array<Sheet> ] = [ this.exerciseDays, this.dataService.getAllSheetsNotObserved() ];
     console.log("export");
     const jsonString = JSON.stringify(daysAndSheets);
     const blob = new Blob([jsonString], { type: 'application/json' });
@@ -289,8 +293,8 @@ export class TableOfContentsComponent {
   clickedImportHtmlButton() {
     console.log("import html");
     var importedSheets: Sheet[] = this.tocService.loadTocAsSheets();
-    this.dataService.putSheets(importedSheets);
-    this.sheets = importedSheets;
+    this.dataService.putAllSheets(importedSheets);
+    this.getSheets();
   }
 
   get isAdmin() {

@@ -18,10 +18,12 @@ export class DataService {
   private allExerciseDays: ExerciseDay[] = [];
   constructor(private messageService: MessageService, private activeService: ActiveService) { }
 
-  getExerciseDays(): Observable<ExerciseDay[]> {
-    if(this.allExerciseDays.length == 0) {
-      this.putExerciseDays(EXERCISEDAYS);
-    };
+  fillDataFromMockData() {
+    this.putAllExerciseDays(EXERCISEDAYS);
+    this.putAllSheets(SHEETS);
+  }
+
+  getAllExerciseDays(): Observable<ExerciseDay[]> {
     this.messageService.add('DataService: Fetched ExerciseDays from Mock-Data');
     var exerciseDays: Observable<ExerciseDay[]>;
     exerciseDays = of(this.allExerciseDays);
@@ -33,22 +35,20 @@ export class DataService {
     return of(exerciseDay);
   }
 
-  putExerciseDays(s: ExerciseDay[]) {
+  putAllExerciseDays(s: ExerciseDay[]) {
     this.allExerciseDays = s;
   }
-  putSheets(s: Sheet[]) {
+
+  putAllSheets(s: Sheet[]) {
     this.allSheets = s;
   }
 
-  getSheets(): Observable<Sheet[]> {
-    if(this.allSheets.length == 0) {
-      this.putSheets(SHEETS);
-    };
+  getAllSheets(): Observable<Sheet[]> {
     var sheets: Observable<Sheet[]>;
     sheets = of(this.allSheets);
     return sheets;
   }
-  getSheetsNotObserved(): Sheet[] {
+  getAllSheetsNotObserved(): Sheet[] {
     return this.allSheets;
   }
   getSheet(shortName: string): Observable<Sheet> {

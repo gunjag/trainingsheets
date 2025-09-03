@@ -92,7 +92,7 @@
               </div>
             </mat-card-content>
           </mat-card>
-          <div class="appButtons">
+          <div class="appButtonsVertical">
             <button type="adminButton" [class]="isAdmin? 'fullFeature':'noFeature'" (click)="clickedAdminButton()" clickable>Admin</button>
             <button type="exportJsonButton" [class]="isAdmin? 'fullFeature':'noFeature'" [disabled]="!isAdmin" (click)="clickedExportJsonButton()" clickable>JSON Export</button>
             <button type="importJsonButton" [class]="isAdmin? 'fullFeature':'noFeature'" [disabled]="!isAdmin" (click)="fileInput.click()" clickable>JSON Import</button>

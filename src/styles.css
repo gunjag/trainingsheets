@@ -9,7 +9,13 @@
     text-align: right;
   }
 
-.appButtons button {
+.appButtonsVertical {
+  display: flex;
+  flex-direction: column;
+}
+
+.appButtons button,
+.appButtonsVertical button {
   background-color: #f1f1f1;
   color:#000;
   border: 2px solid; /* Green border */
@@ -20,7 +26,8 @@
   margin: 5px;
 }
 
-.appButtons button:hover {
+.appButtons button:hover,
+.appButtonsVertical button:hover {
   color: #2c3a41;
   background-color: #e6e6e6;
   left: .1em;
